@@ -12,9 +12,10 @@ namespace MyFirstApp
             {
                 WebRootPath = "webroot"
             });
-            builder.Services.AddTransient<CustomMiddleware1>(); // register in to Iservice collection because
+            //builder.Services.AddTransient<CustomMiddleware1>(); // register in to Iservice collection because
                                                                 // this method uses dependency Injection.
-            builder.Services.AddTransient<LoginMiddlewares>();
+            //builder.Services.AddTransient<LoginMiddlewares>();
+            builder.Services.AddControllers();
             var app = builder.Build();
 
             //app.MapGet("/", () => "Hello World!");
@@ -63,11 +64,13 @@ namespace MyFirstApp
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider= new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "mywebroot"))
-                
             });
 
+
+            app.MapControllers();
+
             #region Enabling routing
-            app.UseRouting();
+            //app.UseRouting();
             #endregion
 
             #region Route parameter handling
@@ -109,9 +112,9 @@ namespace MyFirstApp
             //} );
             #endregion
 
-            app.Run(async (HttpContext context) => {
-                await context.Response.WriteAsync("Ends here.\n");
-            });
+            //app.Run(async (HttpContext context) => {
+            //    await context.Response.WriteAsync("Ends here.\n");
+            //});
 
             app.Run();
 

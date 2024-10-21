@@ -7,7 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Content Remove="wwwroot\outsample.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="webroot\Aakash_P.pdf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="webroot\Aakash_P.pdf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\outsample.txt" />
   </ItemGroup>
 
 </Project>
