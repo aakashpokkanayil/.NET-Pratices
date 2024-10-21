@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.FileProviders;
 using MyFirstApp.Custom_Middleware;
 
 namespace MyFirstApp
@@ -7,7 +8,10 @@ namespace MyFirstApp
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+            {
+                WebRootPath = "webroot"
+            });
             builder.Services.AddTransient<CustomMiddleware1>(); // register in to Iservice collection because
                                                                 // this method uses dependency Injection.
             builder.Services.AddTransient<LoginMiddlewares>();
@@ -52,21 +56,57 @@ namespace MyFirstApp
             //    );
             #endregion
 
+            #region use static files
+            app.UseStaticFiles();
+            #endregion
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider= new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "mywebroot"))
+                
+            });
+
             #region Enabling routing
             app.UseRouting();
             #endregion
 
+            #region Route parameter handling
+            //app.UseEndpoints(endpoints => {
+            //    endpoints.Map("/employee/profile/{empname=Aakash}",async (HttpContext context) => { 
+            //        string? empname = Convert.ToString(context.Request.RouteValues["empname"]);
+            //        if (!string.IsNullOrEmpty(empname) || !string.IsNullOrWhiteSpace(empname))
+            //            await context.Response.WriteAsync($"Hi {empname} wellcome to our company");
+            //    });
+            //    endpoints.Map("/products/{id:int?}",async(HttpContext context) => {
+            //        if (context.Request.RouteValues.ContainsKey("id"))
+            //        {
+            //           int? id = Convert.ToInt32(context.Request.RouteValues["id"]);
+            //           await context.Response.WriteAsync($"Here is the product :{id}");
+            //        }
+            //        else {
+            //           await context.Response.WriteAsync("Welcome to product gallery.");
+            //        }
+            //    });
+            //    endpoints.Map("/datereport/{date:datetime}",async (HttpContext context) => {
+            //        var date=Convert.ToDateTime(context.Request.RouteValues["date"]);
+            //        await context.Response.WriteAsync($"Report for {date.ToShortDateString()}");
+            //    });
+            //});
+            #endregion
+
+            #region Coolect endpoint details
             //app.Use(async (HttpContext context,RequestDelegate next) => {
             //    var endpoints = context.GetEndpoint();
             //    await next(context);
             //});
+            #endregion
 
             #region defining endpoints
-            app.UseEndpoints(endpoints => {
-                endpoints.Map("/Home", async (HttpContext contect) => { await contect.Response.WriteAsync("Home Page\n"); });
-                endpoints.MapPost("/PostHome",async (HttpContext context) => { await context.Response.WriteAsync("PostHome Page\n");});
-                endpoints.MapGet("/GetHome", async (HttpContext context) => { await context.Response.WriteAsync("GetHome Page\n"); });
-            } );
+            //app.UseEndpoints(endpoints => {
+            //    endpoints.Map("/Home", async (HttpContext contect) => { await contect.Response.WriteAsync("Home Page\n"); });
+            //    endpoints.MapPost("/PostHome",async (HttpContext context) => { await context.Response.WriteAsync("PostHome Page\n");});
+            //    endpoints.MapGet("/GetHome", async (HttpContext context) => { await context.Response.WriteAsync("GetHome Page\n"); });
+            //} );
             #endregion
 
             app.Run(async (HttpContext context) => {
