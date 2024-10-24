@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyFirstApp.CustomAttribute;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyFirstApp.Models
 {
@@ -32,6 +33,16 @@ namespace MyFirstApp.Models
         public string? Address { get; set; }
         [Range(0,120,ErrorMessage ="{0} Must be between {1} and {2}")]
         public int Age { get; set; }
+
+        [DobValidator(2002,ErrorMessage ="Your Age must be less than {0}")]  // here first parameter and ErrorMessage prop of ValidationAttribute base class is optional,
+                                                                             // due to we habdles in DobValidator
+        public DateTime DateOfBirth { get; set; }
+
+
+        public DateTime? FromDate { get; set; }
+
+        [DateRangeValidator("FromDate",ErrorMessage ="'FromDate' must be older than or equal to 'ToDate'")]
+        public DateTime? ToDate { get; set; }
         #endregion
 
         public override string ToString()
